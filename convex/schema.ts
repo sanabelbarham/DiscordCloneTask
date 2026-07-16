@@ -14,7 +14,9 @@ export default defineSchema({
     ...authTables.users.validator.fields,
     displayName: v.string(),
     avatarUrl: v.string(),
-  }).index("email", ["email"]),
+  })
+    .index("email", ["email"])
+    .searchIndex("search_displayName", { searchField: "displayName" }),
 
   presence: defineTable({
     userId: v.id("users"),
@@ -61,6 +63,20 @@ export default defineSchema({
   })
     .index("by_channel", ["channelId", "createdAt"])
     .index("by_thread", ["threadId", "createdAt"]),
+
+  // A single row represents a request from `fromUserId` to `toUserId`; once
+  // `status` is "accepted" that same row also represents the friendship itself
+  // (data-model.md §friendRequests — avoids a second, always-in-sync table).
+  friendRequests: defineTable({
+    fromUserId: v.id("users"),
+    toUserId: v.id("users"),
+    status: v.union(v.literal("pending"), v.literal("accepted")),
+    createdAt: v.number(),
+  })
+    .index("by_from_and_to", ["fromUserId", "toUserId"])
+    .index("by_to_and_from", ["toUserId", "fromUserId"])
+    .index("by_from_and_status", ["fromUserId", "status"])
+    .index("by_to_and_status", ["toUserId", "status"]),
 
   directMessageThreads: defineTable({
     participantA: v.id("users"),

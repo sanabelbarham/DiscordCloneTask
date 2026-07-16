@@ -12,6 +12,7 @@ import type * as auth from "../auth.js";
 import type * as calls from "../calls.js";
 import type * as channels from "../channels.js";
 import type * as directMessages from "../directMessages.js";
+import type * as friends from "../friends.js";
 import type * as http from "../http.js";
 import type * as lib_authz from "../lib/authz.js";
 import type * as messages from "../messages.js";
@@ -31,6 +32,7 @@ declare const fullApi: ApiFromModules<{
   calls: typeof calls;
   channels: typeof channels;
   directMessages: typeof directMessages;
+  friends: typeof friends;
   http: typeof http;
   "lib/authz": typeof lib_authz;
   messages: typeof messages;

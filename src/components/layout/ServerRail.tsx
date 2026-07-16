@@ -15,6 +15,18 @@ export default function ServerRail({ onOpenProfile, onSignOut }: ServerRailProps
 
   return (
     <nav className="flex w-rail flex-col items-center gap-2 bg-surface-rail py-3">
+      <NavLink
+        to="/friends"
+        title="Friends"
+        className={({ isActive }) =>
+          `flex h-12 w-12 items-center justify-center rounded-3xl bg-surface-modifier text-sm font-semibold text-text-primary transition-all hover:rounded-2xl hover:bg-brand ${
+            isActive ? "rounded-2xl bg-brand" : ""
+          }`
+        }
+      >
+        👥
+      </NavLink>
+      <div className="h-px w-8 bg-surface-modifier" />
       <div className="flex flex-1 flex-col items-center gap-2 overflow-y-auto">
         {servers?.map((server) => (
           <NavLink

@@ -6,6 +6,7 @@ import ServerRail from "./components/layout/ServerRail";
 import DirectMessagePage from "./routes/DirectMessagePage";
 import DmCallPage from "./routes/DmCallPage";
 import ChannelPage from "./routes/ChannelPage";
+import FriendsPage from "./routes/FriendsPage";
 import JoinInvitePage from "./routes/JoinInvitePage";
 import RequireAuth from "./routes/RequireAuth";
 import ServerLayout from "./routes/ServerLayout";
@@ -48,6 +49,7 @@ export default function App() {
       <Route element={<RequireAuth />}>
         <Route element={<AuthedShell />}>
           <Route path="/" element={<HomePage />} />
+          <Route path="/friends" element={<FriendsPage />} />
           <Route path="/invite/:inviteCode" element={<JoinInvitePage />} />
           <Route path="/servers/:serverId" element={<ServerLayout />}>
             <Route path="channels/:channelId" element={<ChannelPage />} />

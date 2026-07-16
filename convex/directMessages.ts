@@ -1,6 +1,7 @@
 import { v } from "convex/values";
 import type { Id } from "./_generated/dataModel";
 import { mutation, query, type QueryCtx } from "./_generated/server";
+import { areFriends } from "./friends";
 import { forbidden, requireUserId } from "./lib/authz";
 
 async function sharesAServerWith(ctx: QueryCtx, userA: Id<"users">, userB: Id<"users">) {
@@ -36,8 +37,11 @@ export const openOrCreateThread = mutation({
       .unique();
     if (existing) return existing._id;
 
-    if (!(await sharesAServerWith(ctx, userId, otherUserId))) {
-      forbidden("You must share a server with this user to start a DM");
+    if (
+      !(await sharesAServerWith(ctx, userId, otherUserId)) &&
+      !(await areFriends(ctx, userId, otherUserId))
+    ) {
+      forbidden("You must share a server or be friends with this user to start a DM");
     }
 
     return await ctx.db.insert("directMessageThreads", {

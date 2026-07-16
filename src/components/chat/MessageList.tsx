@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
 import Avatar from "../ui/Avatar";
+import LinkifiedContent from "./LinkifiedContent";
 
 interface MessageListProps {
   channelId?: Id<"channels">;
@@ -147,7 +148,9 @@ function MessageRow({
             </button>
           </div>
         ) : (
-          <p className="whitespace-pre-wrap break-words text-sm text-text-primary">{content}</p>
+          <p className="whitespace-pre-wrap break-words text-sm text-text-primary">
+            <LinkifiedContent content={content} />
+          </p>
         )}
       </div>
       {isAuthor && !isEditing && (
