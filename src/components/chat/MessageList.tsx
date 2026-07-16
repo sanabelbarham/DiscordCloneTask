@@ -123,7 +123,7 @@ function MessageRow({
   const author = useQuery(api.users.getProfile, { userId: authorId });
 
   return (
-    <div className="group flex items-start gap-3 rounded px-2 py-1 hover:bg-surface-modifier/40">
+    <div className="group relative flex items-start gap-3 rounded px-2 py-1 hover:bg-surface-modifier/40">
       <Avatar avatarUrl={author?.avatarUrl ?? ""} displayName={author?.displayName ?? "?"} size={36} />
       <div className="min-w-0 flex-1">
         <div className="flex items-baseline gap-2">
@@ -154,12 +154,20 @@ function MessageRow({
         )}
       </div>
       {isAuthor && !isEditing && (
-        <div className="hidden shrink-0 gap-2 group-hover:flex">
-          <button onClick={onStartEdit} className="text-xs text-text-muted hover:text-text-primary">
-            Edit
+        <div className="absolute -top-3 right-2 hidden items-center gap-0.5 rounded-md border border-black/10 bg-surface-sidebar p-0.5 shadow-md group-hover:flex">
+          <button
+            title="Edit"
+            onClick={onStartEdit}
+            className="rounded px-1.5 py-1 text-sm text-text-muted hover:bg-surface-modifier hover:text-text-primary"
+          >
+            ✎
           </button>
-          <button onClick={onDelete} className="text-xs text-text-muted hover:text-status-danger">
-            Delete
+          <button
+            title="Delete"
+            onClick={onDelete}
+            className="rounded px-1.5 py-1 text-sm text-text-muted hover:bg-status-danger/20 hover:text-status-danger"
+          >
+            🗑
           </button>
         </div>
       )}
