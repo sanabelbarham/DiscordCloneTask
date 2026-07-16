@@ -37,17 +37,19 @@ export default function VideoTile({
         isSpeaking ? "ring-2 ring-status-online" : ""
       }`}
     >
-      {showVideo ? (
+      {/* Kept mounted (just visually hidden) even when the camera is off, so the
+          audio track riding on this same element never stops playing —
+          swapping it out for the Avatar branch would silence the remote peer. */}
+      {stream && (
         <video
           ref={videoRef}
           autoPlay
           playsInline
           muted={isLocal}
-          className="h-full w-full object-cover"
+          className={`h-full w-full object-cover ${showVideo ? "" : "hidden"}`}
         />
-      ) : (
-        <Avatar avatarUrl={avatarUrl} displayName={displayName} size={72} />
       )}
+      {!showVideo && <Avatar avatarUrl={avatarUrl} displayName={displayName} size={72} />}
       <div className="absolute bottom-1 left-1 flex items-center gap-1 rounded bg-black/60 px-1.5 py-0.5 text-xs text-white">
         {!micOn && <span title="Muted">🔇</span>}
         <span>{displayName}</span>

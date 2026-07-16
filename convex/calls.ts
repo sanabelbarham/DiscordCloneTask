@@ -168,6 +168,43 @@ export const setMediaState = mutation({
   },
 });
 
+export const listIncomingCalls = query({
+  args: {},
+  handler: async (ctx) => {
+    const userId = await requireUserId(ctx);
+    const asA = await ctx.db
+      .query("directMessageThreads")
+      .withIndex("by_participantA", (q) => q.eq("participantA", userId))
+      .collect();
+    const asB = await ctx.db
+      .query("directMessageThreads")
+      .withIndex("by_participantB", (q) => q.eq("participantB", userId))
+      .collect();
+
+    const now = Date.now();
+    const incoming = [];
+    for (const thread of [...asA, ...asB]) {
+      const call = await ctx.db
+        .query("calls")
+        .withIndex("by_thread", (q) => q.eq("threadId", thread._id))
+        .unique();
+      if (!call) continue;
+
+      const participants = await ctx.db
+        .query("callParticipants")
+        .withIndex("by_call", (q) => q.eq("callId", call._id))
+        .collect();
+      const alive = participants.filter((p) => now - p.lastHeartbeatAt < STALE_THRESHOLD_MS);
+      if (alive.length === 0 || alive.some((p) => p.userId === userId)) continue;
+
+      const otherUserId = thread.participantA === userId ? thread.participantB : thread.participantA;
+      const otherUser = await ctx.db.get(otherUserId);
+      incoming.push({ threadId: thread._id, callId: call._id, otherUser });
+    }
+    return incoming.filter((c) => c.otherUser !== null);
+  },
+});
+
 export const listParticipants = query({
   args: { callId: v.id("calls") },
   handler: async (ctx, { callId }) => {

@@ -13,6 +13,7 @@ import ServerLayout from "./routes/ServerLayout";
 import SignInPage from "./routes/SignInPage";
 import SignUpPage from "./routes/SignUpPage";
 import VoiceChannelPage from "./routes/VoiceChannelPage";
+import IncomingCallBanner from "./components/voice/IncomingCallBanner";
 import { useHeartbeat } from "./lib/usePresence";
 
 function HomePage() {
@@ -32,6 +33,7 @@ function AuthedShell() {
 
   return (
     <div className="flex h-screen w-screen bg-surface-main">
+      <IncomingCallBanner />
       <ServerRail onOpenProfile={() => setShowProfile(true)} onSignOut={() => void signOut()} />
       <div className="flex flex-1 overflow-hidden">
         <Outlet />
